@@ -10,18 +10,12 @@ $submitButton.addEventListener("click", async(e)=>{
     e.preventDefault()
 
     //restrictions for data provided by the user
-    if (!($numOfAdults.value) || !($roomType.value) || !($numOfChildren.value) || !($mealPlanSelect.value) || !($checkInDate.value) || !($checkOutDate.value)) {
-        return alert('please fill all fields!')
+    if (!($numOfAdults.value) || !($roomType.value) || !($mealPlanSelect.value) || !($checkInDate.value) || !($checkOutDate.value)) {
+        return alert('Please fill all fields!')
     }
     
-    if (new Date($checkInDate.value).getTime() < new Date() ) {
-        return alert("dates prior to today cannot be accepted!")
-    }
-    if (new Date($checkOutDate.value).getTime() < new Date() ) {
-        return alert("dates prior to today cannot be accepted!")
-    }
     if (new Date($checkOutDate.value).getTime() <= new Date($checkInDate.value).getTime()) {
-        return alert("checkout date must be after the check in date!")
+        return alert("Checkout date must be after the check in date!")
     }
 
     //save the data provided into an object to send it in the request body
@@ -42,6 +36,11 @@ $submitButton.addEventListener("click", async(e)=>{
                              },
                     body: JSON.stringify(reservationInfo)
                     })).json()
+    
+                    
+    if (response.error) {
+        return alert(response.error)
+    }
     document.getElementById('total').innerHTML= `Total is: ${response.totalPrice} <b>$</b>`
 })
 

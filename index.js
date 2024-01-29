@@ -36,16 +36,27 @@ app.get('/mainInfo', async(req, res)=>{
 })
 
 app.post('/totalPrice', validateInputs, async(req, res)=>{
-    const submittedInfo = req.body
+    try {
+        const submittedInfo = req.body
 
-    //fetch the arrays of possible rates for the specified meal plan and room type from the database
-    const roomType = await RoomType.findOne({name:submittedInfo.roomType}).populate('possibleRates')
-    const mealPlan = await MealPlan.findOne({name: submittedInfo.mealPlan}).populate('possibleRates')
+        //fetch the arrays of possible rates for the specified meal plan and room type from the database
+        const roomType = await RoomType.findOne({name:submittedInfo.roomType}).populate('possibleRates')
+        const mealPlan = await MealPlan.findOne({name: submittedInfo.mealPlan}).populate('possibleRates')
+        
+        const total = calculateTotal(submittedInfo.numOfAdults, submittedInfo.numOfChildren, submittedInfo.checkInDate, submittedInfo.checkOutDate, mealPlan.possibleRates, roomType.possibleRates)
+        console.log(total)
+        if (total.error) {
+            res.status(400).send(total.error)
+        }
+        res.send({
+            totalPrice: total
+        })
+    } catch (err) {
+        res.send({
+        error: 'Server Error, kindly try again later!'
+        })
+    }
     
-    const total = calculateTotal(submittedInfo.numOfAdults, submittedInfo.numOfChildren, submittedInfo.checkInDate, submittedInfo.checkOutDate, mealPlan.possibleRates, roomType.possibleRates)
-    console.log(total)
-    res.send({
-        totalPrice: total
-    })
+    
 })
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

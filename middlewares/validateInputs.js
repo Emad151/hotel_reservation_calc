@@ -1,17 +1,17 @@
 const validateInputs = function (req, res, next) {
+    //default values for number of children and check in date if not provided
+    if (!req.body.numOfChildren) {
+        req.body.numOfChildren = 0
+    }
     //to check that data is provided
-    if (!req.body || !req.body.numOfAdults || !req.body.roomType || !req.body.mealPlan || !req.body.checkInDate || !req.body.checkOutDate) {
-        return res.status(400).send()
+    if (!req.body || !req.body.numOfAdults || !req.body.roomType || !req.body.mealPlan || !req.body.checkOutDate || !req.body.checkInDate) {
+        return res.status(400).send({error: 'Incomplete information'})
     }
-    //to check that the dates are semantically correct according to order!
+    //to check that check-in date is before checkout date  
     if (new Date(req.body.checkInDate).getTime() >= new Date(req.body.checkOutDate).getTime()) {
-        
-        return res.status(400).send()
+        return res.status(400).send({error: 'Check-in Date cannot precede or be in the same day as check-out date'})
     }
-    //to check that dates cannot be before the current day 
-    if (new Date(req.body.checkInDate).getTime() <= new Date().getTime() - 24 * 60 * 60 * 1000) {
-        return res.status(400).send()
-    }
+    
     next()
 }
 module.exports = validateInputs
