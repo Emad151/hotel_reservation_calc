@@ -13,9 +13,9 @@ const RoomTypeRate = require('./db/models/RoomTypeRate')
 const calculateTotal = require('./utils/calculateTotal')
 const validateInputs = require('./middlewares/validateInputs')
 
-//connect to database
+//connect to database and setting env vars
 require('./db/connect')
-
+require('dotenv').config();
 
 //setting the client side (public files)
 const path = require('path')
