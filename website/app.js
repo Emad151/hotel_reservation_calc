@@ -45,7 +45,11 @@ $submitButton.addEventListener("click", async(e)=>{
 })
 
 //fetching available meal plans and room types to render in the form
-fetch(`${location.origin}/mainInfo`).then(mainInfo => mainInfo.json() ).then(({mealPlans, roomTypes})=>{
+fetch(`${location.origin}/mainInfo`).then(response => response.json() ).then( response => {
+    if (response.error) {
+        return alert(response.error)
+    }
+    const {mealPlans, roomTypes} = response
     for (const mealPlan of mealPlans) {
         const optionElement = document.createElement('option')
         optionElement.setAttribute('value', mealPlan)
