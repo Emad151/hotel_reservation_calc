@@ -45,7 +45,7 @@ app.get('/mainInfo', async(req, res)=>{
     
 })
 
-app.post('/totalPrice', validateInputs, async(req, res)=>{
+app.post('/totalPrice', validateInputs(), async(req, res)=>{
     try {
         const submittedInfo = req.body
 
@@ -59,7 +59,6 @@ app.post('/totalPrice', validateInputs, async(req, res)=>{
         }
 
         const total = calculateTotal(submittedInfo.numOfAdults, submittedInfo.numOfChildren, submittedInfo.checkInDate, submittedInfo.checkOutDate, mealPlan.possibleRates, roomType.possibleRates)
-        console.log(total)
         if (total.error) {
             return res.status(500).send(total)
         }
